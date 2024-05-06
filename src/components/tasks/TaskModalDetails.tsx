@@ -10,7 +10,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTaskById, updateStatus } from "@/api/TaskAPI";
 import { toast } from "react-toastify";
 import { formatDate } from "@/utils/utils";
-import { statusTranslation } from "@/api/locales/es";
+import { statusTranslation } from "@/locales/es";
 import { TaskStatus } from "@/types/index";
 
 export default function TaskModalDetails() {
