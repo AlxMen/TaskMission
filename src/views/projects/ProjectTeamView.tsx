@@ -8,6 +8,7 @@ import { EllipsisVerticalIcon } from "@heroicons/react/20/solid";
 import { toast } from "react-toastify";
 
 export default function ProjectTeamView() {
+  
   const navigate = useNavigate();
   const params = useParams();
   const projectId = params.projectId!;
