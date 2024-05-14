@@ -14,7 +14,6 @@ import { statusTranslation } from "@/locales/es";
 import { TaskStatus } from "@/types/index";
 
 export default function TaskModalDetails() {
-
   const params = useParams();
   const projectId = params.projectId!;
   const navigate = useNavigate();
@@ -31,25 +30,24 @@ export default function TaskModalDetails() {
     retry: false,
   });
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: updateStatus,
     onError: (error) => {
-      toast.error(error.message)
+      toast.error(error.message);
     },
     onSuccess: (data) => {
-      toast.success(data)
+      toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["editProject", projectId] });
       queryClient.invalidateQueries({ queryKey: ["task", taskId] });
-    }
-  })
+    },
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const status = e.target.value as TaskStatus
-    const data = { projectId, taskId, status }
+    const status = e.target.value as TaskStatus;
+    const data = { projectId, taskId, status };
     mutate(data);
-    
-  }
+  };
 
   if (isError) {
     toast.error(error.message, { toastId: "error" });
@@ -104,18 +102,36 @@ export default function TaskModalDetails() {
                     <p className="text-lg text-slate-500 mb-2">
                       Descripción: {data.description}
                     </p>
+                    <p className="text-2xl text-slate-500 mb-2">
+                      Historal de Estado
+                    </p>
+                    <div className="border-2 p-2 rounded-md border-slate-700 overflow-y-scroll max-h-28">
+                      <ul className=" ml-5 list-decimal">
+                        {data.completedBy.map((activityLog) => (
+                          <li key={activityLog._id} className="font-black">
+                            <span className="font-bold text-slate-600">
+                              {statusTranslation[activityLog.status]} por:
+                            </span>{" "}
+                            {activityLog.user.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
                     <div className="my-5 space-y-3">
-                      <label className="font-bold">
-                        Estado Actual: 
-                      </label>
+                      <label className="font-bold">Estado Actual:</label>
                       <select
                         className="w-full p-3 bg-white border border-gray-300"
                         defaultValue={data.status}
                         onChange={handleChange}
                       >
-                        {Object.entries(statusTranslation).map(([key, value]) => (
-                          <option key={key} value={key}>{value}</option>
-                        ))}
+                        {Object.entries(statusTranslation).map(
+                          ([key, value]) => (
+                            <option key={key} value={key}>
+                              {value}
+                            </option>
+                          )
+                        )}
                       </select>
                     </div>
                   </Dialog.Panel>
